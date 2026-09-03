@@ -3,7 +3,7 @@ import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine 
 } from 'recharts';
 import { 
-  Activity, Terminal, Zap, TrendingUp, Settings, CheckCircle2, Clock, ArrowUpRight, ArrowDownRight, ShieldCheck, Sliders 
+  Activity, Terminal, Zap, TrendingUp, Settings, CheckCircle2, Clock, ArrowUpRight, ArrowDownRight, ShieldCheck, Sun, Moon, Sliders 
 } from 'lucide-react';
 
 // Data Struktur Kontrak Terintegrasi dengan TWAP & Real-Time Feed
@@ -19,11 +19,11 @@ const CONTRACT_MARKETS = [
     edgeSignal: '+9% (UP)', 
     status: 'LIVE_ACTIVE',
     chartData: [
-      { time: '14:30:00', spot: 108420, twap: 108440 },
-      { time: '14:31:00', spot: 108435, twap: 108441 },
-      { time: '14:32:00', spot: 108460, twap: 108442 },
-      { time: '14:33:00', spot: 108455, twap: 108442 },
-      { time: '14:34:00', spot: 108475, twap: 108442.5 }
+      { time: '14:30', spot: 108420, twap: 108440 },
+      { time: '14:31', spot: 108435, twap: 108441 },
+      { time: '14:32', spot: 108460, twap: 108442 },
+      { time: '14:33', spot: 108455, twap: 108442 },
+      { time: '14:34', spot: 108475, twap: 108442.5 }
     ]
   },
   { 
@@ -37,11 +37,11 @@ const CONTRACT_MARKETS = [
     edgeSignal: '-3% (DOWN)', 
     status: 'QUEUED',
     chartData: [
-      { time: '14:35:00', spot: 108470, twap: 108472 },
-      { time: '14:36:00', spot: 108475, twap: 108473 },
-      { time: '14:37:00', spot: 108465, twap: 108474 },
-      { time: '14:38:00', spot: 108472, twap: 108475 },
-      { time: '14:39:00', spot: 108478, twap: 108475 }
+      { time: '14:35', spot: 108470, twap: 108472 },
+      { time: '14:36', spot: 108475, twap: 108473 },
+      { time: '14:37', spot: 108465, twap: 108474 },
+      { time: '14:38', spot: 108472, twap: 108475 },
+      { time: '14:39', spot: 108478, twap: 108475 }
     ]
   },
   { 
@@ -55,11 +55,11 @@ const CONTRACT_MARKETS = [
     edgeSignal: 'NEUTRAL', 
     status: 'PENDING',
     chartData: [
-      { time: '14:40:00', spot: 108485, twap: 108490 },
-      { time: '14:41:00', spot: 108490, twap: 108492 },
-      { time: '14:42:00', spot: 108495, twap: 108493 },
-      { time: '14:43:00', spot: 108498, twap: 108494 },
-      { time: '14:44:00', spot: 108500, twap: 108495 }
+      { time: '14:40', spot: 108485, twap: 108490 },
+      { time: '14:41', spot: 108490, twap: 108492 },
+      { time: '14:42', spot: 108495, twap: 108493 },
+      { time: '14:43', spot: 108498, twap: 108494 },
+      { time: '14:44', spot: 108500, twap: 108495 }
     ]
   },
 ];
@@ -70,12 +70,14 @@ export default function App() {
   const [bankroll, setBankroll] = useState(10000);
   const [countdown, setCountdown] = useState(180);
   const [activeTab, setActiveTab] = useState<'matrix' | 'config' | 'logs'>('matrix');
+  
+  // Kontrol Tema & Kontras Manual (Institutional Dark, OLED Black, Amber Retro, Light Mode)
   const [themeMode, setThemeMode] = useState<'institutional' | 'oled' | 'amber' | 'light'>('institutional');
 
   const [logs, setLogs] = useState<string[]>([
-    '[INIT] Chart engine calibrated with high-precision scaling.',
-    '[CLOB] Polymarket orderbook feed operational (Real-time).',
-    '[ORACLE] Chainlink TWAP benchmark overlay active.'
+    '[INIT] Terminal initialized with Adaptive Contrast Engine.',
+    '[CLOB] WebSocket connected to Polymarket 5M feed endpoints.',
+    '[ORACLE] Chainlink TWAP validation active across all active intervals.'
   ]);
 
   useEffect(() => {
@@ -95,22 +97,67 @@ export default function App() {
     if (!selectedContract) return;
     const odds = direction === 'UP' ? selectedContract.upOdds : selectedContract.downOdds;
     const stake = (bankroll * kellyFraction * odds).toFixed(2);
-    const logEntry = `[EXECUTION] Direction: ${direction} | Window: ${selectedContract.interval} | Stake: $${stake} (${kellyFraction * 100}% Kelly)`;
+    const logEntry = `[EXECUTION] Direction: ${direction} | Window: ${selectedContract.interval} | Stake: $${stake} (${kellyFraction * 100}% Kelly) | Theme: ${themeMode}`;
     setLogs(prev => [logEntry, ...prev]);
   };
 
+  // Konfigurasi Styles berdasarkan Tema Kontras Manual
   const themes = {
     institutional: {
-      bg: 'bg-[#090d16]', header: 'bg-[#0c111d] border-[#1e293b]', card: 'bg-[#121824] border-[#1e293b]', subCard: 'bg-[#090d16] border-[#1e293b]', textPrimary: 'text-slate-200', textMuted: 'text-slate-400', accent: 'text-cyan-400', border: 'border-[#1e293b]', hoverRow: 'hover:bg-[#1a2233]', selectedRow: 'bg-cyan-950/30 border-l-2 border-cyan-400', chartGrid: '#1e293b', chartText: '#64748b'
+      bg: 'bg-[#090d16]',
+      header: 'bg-[#0c111d] border-[#1e293b]',
+      card: 'bg-[#121824] border-[#1e293b]',
+      subCard: 'bg-[#090d16] border-[#1e293b]',
+      textPrimary: 'text-slate-200',
+      textMuted: 'text-slate-400',
+      accent: 'text-cyan-400',
+      border: 'border-[#1e293b]',
+      hoverRow: 'hover:bg-[#1a2233]',
+      selectedRow: 'bg-cyan-950/30 border-l-2 border-cyan-400',
+      chartGrid: '#1e293b',
+      chartText: '#64748b'
     },
     oled: {
-      bg: 'bg-black', header: 'bg-zinc-950 border-zinc-800', card: 'bg-zinc-900 border-zinc-800', subCard: 'bg-black border-zinc-800', textPrimary: 'text-zinc-100', textMuted: 'text-zinc-400', accent: 'text-emerald-400', border: 'border-zinc-800', hoverRow: 'hover:bg-zinc-800/50', selectedRow: 'bg-emerald-950/30 border-l-2 border-emerald-400', chartGrid: '#27272a', chartText: '#71717a'
+      bg: 'bg-black',
+      header: 'bg-zinc-950 border-zinc-800',
+      card: 'bg-zinc-900 border-zinc-800',
+      subCard: 'bg-black border-zinc-800',
+      textPrimary: 'text-zinc-100',
+      textMuted: 'text-zinc-400',
+      accent: 'text-emerald-400',
+      border: 'border-zinc-800',
+      hoverRow: 'hover:bg-zinc-800/50',
+      selectedRow: 'bg-emerald-950/30 border-l-2 border-emerald-400',
+      chartGrid: '#27272a',
+      chartText: '#71717a'
     },
     amber: {
-      bg: 'bg-[#120d08]', header: 'bg-[#1a120b] border-[#38220f]', card: 'bg-[#1d140c] border-[#38220f]', subCard: 'bg-[#120d08] border-[#38220f]', textPrimary: 'text-amber-100', textMuted: 'text-amber-500/80', accent: 'text-amber-400', border: 'border-[#38220f]', hoverRow: 'hover:bg-[#2b1c11]', selectedRow: 'bg-amber-950/40 border-l-2 border-amber-400', chartGrid: '#38220f', chartText: '#b45309'
+      bg: 'bg-[#120d08]',
+      header: 'bg-[#1a120b] border-[#38220f]',
+      card: 'bg-[#1d140c] border-[#38220f]',
+      subCard: 'bg-[#120d08] border-[#38220f]',
+      textPrimary: 'text-amber-100',
+      textMuted: 'text-amber-500/80',
+      accent: 'text-amber-400',
+      border: 'border-[#38220f]',
+      hoverRow: 'hover:bg-[#2b1c11]',
+      selectedRow: 'bg-amber-950/40 border-l-2 border-amber-400',
+      chartGrid: '#38220f',
+      chartText: '#b45309'
     },
     light: {
-      bg: 'bg-slate-100', header: 'bg-white border-slate-300', card: 'bg-white border-slate-300', subCard: 'bg-slate-50 border-slate-200', textPrimary: 'text-slate-900', textMuted: 'text-slate-600', accent: 'text-blue-600', border: 'border-slate-300', hoverRow: 'hover:bg-slate-100', selectedRow: 'bg-blue-50 border-l-2 border-blue-600', chartGrid: '#cbd5e1', chartText: '#475569'
+      bg: 'bg-slate-100',
+      header: 'bg-white border-slate-300',
+      card: 'bg-white border-slate-300',
+      subCard: 'bg-slate-50 border-slate-200',
+      textPrimary: 'text-slate-900',
+      textMuted: 'text-slate-600',
+      accent: 'text-blue-600',
+      border: 'border-slate-300',
+      hoverRow: 'hover:bg-slate-100',
+      selectedRow: 'bg-blue-50 border-l-2 border-blue-600',
+      chartGrid: '#cbd5e1',
+      chartText: '#475569'
     }
   };
 
@@ -131,7 +178,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* KONTROL KONTRAS MANUAL */}
+        {/* KONTROL KONTRAS MANUAL (THEME SWITCHER) */}
         <div className="flex items-center space-x-2 bg-black/20 p-1 rounded border border-current/10">
           <Sliders className="w-3.5 h-3.5 ml-1 text-slate-400" />
           <span className="text-[10px] uppercase text-slate-400 font-bold px-1">Contrast:</span>
@@ -171,7 +218,7 @@ export default function App() {
                   <Zap className={`w-4 h-4 ${t.accent}`} /> 5-Minute BTC Contract Matrix
                 </h2>
                 <span className="text-xs text-emerald-500 flex items-center gap-1 font-semibold">
-                  <ShieldCheck className="w-3.5 h-3.5" /> Polymarket Live Feed
+                  <ShieldCheck className="w-3.5 h-3.5" /> TWAP Synced
                 </span>
               </div>
 
@@ -214,7 +261,7 @@ export default function App() {
               </div>
             </section>
 
-            {/* RIGHT PANEL: INSTITUTIONAL STABILIZED CHART */}
+            {/* RIGHT PANEL: STABILIZED CHART & PROJECTIONS */}
             <section className={`lg:col-span-5 ${t.card} border rounded-lg p-4 flex flex-col shadow-sm`}>
               <div className={`flex items-center justify-between mb-3 pb-2 border-b ${t.border}`}>
                 <h2 className={`text-xs font-bold uppercase tracking-wider ${t.textPrimary} flex items-center gap-2`}>
@@ -223,10 +270,10 @@ export default function App() {
                 <span className="text-[11px] text-amber-500 font-mono font-bold">TWAP: ${selectedContract.twapBenchmark.toLocaleString()}</span>
               </div>
 
-              {/* Chart dengan Skala Profesional & Responsif Penuh */}
-              <div className={`h-52 w-full my-2 ${t.subCard} p-3 rounded border`}>
+              {/* Chart Stabil & Nyaman di Mata */}
+              <div className={`h-48 w-full my-2 ${t.subCard} p-2 rounded border`}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={selectedContract.chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                  <LineChart data={selectedContract.chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke={t.chartGrid} vertical={false} />
                     <XAxis dataKey="time" stroke={t.chartText} fontSize={10} tickLine={false} />
                     <YAxis 
@@ -234,31 +281,15 @@ export default function App() {
                       stroke={t.chartText} 
                       fontSize={10} 
                       tickLine={false} 
-                      tickFormatter={(val) => `$${val.toLocaleString()}`}
+                      tickFormatter={(val) => `$${val}`}
                     />
                     <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: themeMode === 'light' ? '#ffffff' : '#0c111d', 
-                        borderColor: t.chartGrid, 
-                        fontSize: '11px', 
-                        borderRadius: '4px', 
-                        color: t.textPrimary,
-                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' 
-                      }}
-                      formatter={(value: any, name: any) => [
-                        `$${Number(value).toLocaleString()}`, 
-                        name === 'spot' ? 'Spot Price' : 'Chainlink TWAP'
-                      ]}
+                      contentStyle={{ backgroundColor: t.card.includes('bg-white') ? '#ffffff' : '#0c111d', borderColor: t.chartGrid, fontSize: '11px', borderRadius: '4px', color: t.textPrimary }}
+                      formatter={(value: any) => [`$${Number(value).toLocaleString()}`]}
                     />
-                    <ReferenceLine 
-                      y={selectedContract.strikePrice} 
-                      stroke="#f59e0b" 
-                      strokeDasharray="4 4" 
-                      strokeWidth={1.5}
-                      label={{ value: `Strike: $${selectedContract.strikePrice}`, fill: '#f59e0b', fontSize: 10, position: 'insideTopRight' }} 
-                    />
-                    <Line type="monotone" dataKey="spot" stroke="#38bdf8" strokeWidth={2.5} dot={false} activeDot={{ r: 5 }} name="spot" />
-                    <Line type="monotone" dataKey="twap" stroke="#34d399" strokeWidth={1.5} dot={false} name="twap" />
+                    <ReferenceLine y={selectedContract.strikePrice} stroke="#f59e0b" strokeDasharray="3 3" label={{ value: 'Strike', fill: '#f59e0b', fontSize: 10, position: 'insideTopRight' }} />
+                    <Line type="monotone" dataKey="spot" stroke="#38bdf8" strokeWidth={2} dot={false} activeDot={{ r: 4 }} name="Spot Price" />
+                    <Line type="monotone" dataKey="twap" stroke="#34d399" strokeWidth={1.5} dot={false} name="Chainlink TWAP" />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -272,7 +303,7 @@ export default function App() {
                       <button
                         key={frac}
                         onClick={() => setKellyFraction(frac)}
-                        className={`px-2 py-1 text-[11px] rounded border transition ${kellyFraction === frac ? 'bg-cyan-500/20 border-cyan-500 text-cyan-400 font-bold' : `${t.border} ${t.textMuted}`}`}
+                        className={`px-2 py-1 text-[11px] rounded border transition cursor-pointer ${kellyFraction === frac ? 'bg-cyan-500/20 border-cyan-500 text-cyan-400 font-bold' : `${t.border} ${t.textMuted}`}`}
                       >
                         {frac === 0.25 ? '0.25 (Safe)' : '0.5 (Half)'}
                       </button>
@@ -343,7 +374,7 @@ export default function App() {
       <footer className={`border-t ${t.header} px-4 py-2 text-[11px] ${t.textMuted} flex justify-between`}>
         <span>ZBY-BTC Quantitative Terminal — Institutional Standard</span>
         <span className="text-emerald-500 flex items-center gap-1 font-semibold">
-          <CheckCircle2 className="w-3 h-3" /> Chart Engine Fully Stabilized
+          <CheckCircle2 className="w-3 h-3" /> Adaptive Contrast Engine Active
         </span>
       </footer>
 
